@@ -42,8 +42,6 @@
 </template>
 
 <script>
-import axios from 'axios';
-
 export default {
   data() {
     return {
@@ -69,9 +67,7 @@ export default {
         password: this.password,
         email: this.email
       };
-      axios
-        .post('http://localhost:3000/api/users', { user })
-        .then(res => console.log(res.data));
+      this.$store.dispatch('signUserUp', { user });
       this.$refs.form.reset();
     }
   }
