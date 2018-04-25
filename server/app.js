@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const logger = require('morgan');
 const cors = require('cors');
+const mongoose = require('mongoose');
 
 const usersRouter = require('./api/routes/users');
 
@@ -14,6 +15,19 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/users', usersRouter);
+
+mongoose.connect(process.env.MONGOLAB_URI);
+mongoose.Promise = global.Promise;
+
+app.use((error, req, res, next) => {
+  console.log(error);
+  res.status(error.status || 500);
+  res.json({
+    error: {
+      message: error.message
+    }
+  });
+});
 
 app.get('/*', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'public/index.html'));
