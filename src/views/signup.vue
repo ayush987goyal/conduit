@@ -2,13 +2,19 @@
   <v-container>
     <v-layout row>
       <v-flex xs6 offset-xs3 class="text-xs-center">
-          <h2 class="display-2 mb-2">Sign in</h2>
-          <router-link to="/register" class="link subheading">Need an account?</router-link>
+          <h2 class="display-2 mb-2">Sign up</h2>
+          <router-link to="/login" class="link subheading">Have an account?</router-link>
       </v-flex>
     </v-layout>
     <v-layout row>
       <v-flex xs6 offset-xs3 class="mt-3">
         <v-form v-model="valid" @submit.prevent ref="form" lazy-validation>
+          <v-text-field
+            label="Username"
+            v-model="username"
+            :rules="usernameRules"
+            validate-on-blur>
+          </v-text-field>
           <v-text-field
             label="E-mail"
             v-model="email"
@@ -28,7 +34,7 @@
             color="green lighten-1"
             @click="submit"
             :disabled="!valid">
-            Sign in
+            Sign up
           </v-btn>
         </v-form>
       </v-flex>
@@ -41,6 +47,8 @@ export default {
   data() {
     return {
       valid: false,
+      username: '',
+      usernameRules: [v => !!v || 'Username is required'],
       email: '',
       emailRules: [
         v => !!v || 'E-mail is required',
@@ -54,7 +62,7 @@ export default {
   },
   methods: {
     submit() {
-      console.log(this.email, this.password);
+      console.log(this.username, this.email, this.password);
       this.$refs.form.reset();
     }
   }

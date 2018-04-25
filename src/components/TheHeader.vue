@@ -1,6 +1,6 @@
 <template>
   <v-toolbar app>
-    <v-toolbar-title @click="$router.push('/')">{{ title }}</v-toolbar-title>
+    <v-toolbar-title style="color: #66BB6A" class="headline ml-5" @click="$router.push('/')">{{ title }}</v-toolbar-title>
     <v-spacer></v-spacer>
     <v-toolbar-items>
       <v-btn flat to="/">
