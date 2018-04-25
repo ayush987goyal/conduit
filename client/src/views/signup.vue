@@ -2,8 +2,8 @@
   <v-container>
     <v-layout row>
       <v-flex xs6 offset-xs3 class="text-xs-center">
-          <h2 class="display-2 mb-2">Sign up</h2>
-          <router-link to="/login" class="link subheading">Have an account?</router-link>
+        <h2 class="display-2 mb-2">Sign up</h2>
+        <router-link to="/login" class="link subheading">Have an account?</router-link>
       </v-flex>
     </v-layout>
     <v-layout row>
@@ -30,8 +30,7 @@
           <v-btn
             type="submit"
             class="mt-4 ml-0"
-            style="color: white"
-            color="green lighten-1"
+            color="primary"
             @click="submit"
             :disabled="!valid">
             Sign up
