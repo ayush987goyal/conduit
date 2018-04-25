@@ -25,7 +25,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['user']),
+    ...mapState({ user: state => state.user.user }),
     menuItems() {
       let menuItems = [
         { icon: 'touch_app', title: 'Sign in', link: '/login' },

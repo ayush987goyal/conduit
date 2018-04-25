@@ -42,6 +42,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
@@ -62,6 +64,14 @@ export default {
   methods: {
     submit() {
       console.log(this.username, this.email, this.password);
+      const user = {
+        username: this.username,
+        password: this.password,
+        email: this.email
+      };
+      axios
+        .post('http://localhost:3000/api/users', { user })
+        .then(res => console.log(res.data));
       this.$refs.form.reset();
     }
   }
