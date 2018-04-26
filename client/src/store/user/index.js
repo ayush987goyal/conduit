@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from '@/axios-auth';
 
 export default {
   state: {
@@ -16,7 +16,7 @@ export default {
       commit('clearError');
 
       axios
-        .post('http://localhost:3000/api/users', payload)
+        .post('/users', payload)
         .then(res => {
           commit('setLoading', false);
           commit('setUser', res.data.user);
@@ -31,7 +31,7 @@ export default {
       commit('clearError');
 
       axios
-        .post('http://localhost:3000/api/users/login', payload)
+        .post('/users/login', payload)
         .then(res => {
           commit('setLoading', false);
           commit('setUser', res.data.user);

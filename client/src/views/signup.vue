@@ -73,7 +73,6 @@ export default {
   },
   methods: {
     submit() {
-      console.log(this.username, this.email, this.password);
       const user = {
         username: this.username,
         password: this.password,
