@@ -36,6 +36,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   data() {
     return {
@@ -50,6 +52,16 @@ export default {
       password: '',
       passwordRules: [v => !!v || 'Password is required']
     };
+  },
+  computed: {
+    ...mapState({ user: state => state.user.user })
+  },
+  watch: {
+    user(value) {
+      if (value !== null && value !== undefined) {
+        this.$router.push('/');
+      }
+    }
   },
   methods: {
     submit() {

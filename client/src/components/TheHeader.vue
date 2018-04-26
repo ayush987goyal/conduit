@@ -4,11 +4,11 @@
     <v-spacer></v-spacer>
     <v-toolbar-items>
       <v-btn flat to="/">
-        <v-icon left>home</v-icon>
+        <v-icon left color="green lighten-1">home</v-icon>
         Home
       </v-btn>
       <v-btn flat v-for="item in menuItems" :key="item.title" :to="item.link">
-        <v-icon left>{{ item.icon }}</v-icon>
+        <v-icon left color="green lighten-1">{{ item.icon }}</v-icon>
         {{ item.title }}
       </v-btn>
     </v-toolbar-items>
