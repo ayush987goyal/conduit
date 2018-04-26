@@ -44,14 +44,14 @@ const user_login = async (req, res, next) => {
   const user = await User.find({ email: reqData.email }).exec();
   if (user.length < 1) {
     return res.status(401).json({
-      message: 'Auth failed'
+      message: 'Invalid username or password'
     });
   }
 
   const isValid = await bcrypt.compare(reqData.password, user[0].password);
   if (!isValid) {
     return res.status(401).json({
-      message: 'Auth failed'
+      message: 'Invalid username or password'
     });
   }
 
