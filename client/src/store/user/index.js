@@ -45,6 +45,23 @@ export default {
           commit('setError', err.response.data.message);
         });
     },
+    tryAutoLogin({ commit }) {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        return;
+      }
+
+      commit('setLoading', true);
+      axios
+        .get('/user')
+        .then(res => {
+          commit('setLoading', false);
+          commit('setUser', res.data.user);
+        })
+        .catch(() => {
+          commit('setLoading', false);
+        });
+    },
     logUserOut({ commit }) {
       commit('clearUser');
     }

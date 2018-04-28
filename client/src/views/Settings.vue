@@ -62,7 +62,12 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
+  computed: {
+    ...mapState({ user: state => state.user.user })
+  },
   data() {
     return {
       valid: false,
@@ -79,6 +84,12 @@ export default {
       ],
       password: ''
     };
+  },
+  mounted() {
+    this.image = this.user.image;
+    this.username = this.user.username;
+    this.bio = this.user.bio;
+    this.email = this.user.email;
   },
   methods: {
     submit() {},

@@ -37,6 +37,9 @@ export default {
     clearError() {
       this.$store.commit('clearError');
     }
+  },
+  created() {
+    this.$store.dispatch('tryAutoLogin');
   }
 };
 </script>
