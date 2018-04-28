@@ -8,6 +8,10 @@ export default {
     setUser(state, payload) {
       state.user = payload;
       localStorage.setItem('token', payload.token);
+    },
+    clearUser(state) {
+      state.user = null;
+      localStorage.removeItem('token');
     }
   },
   actions: {
@@ -40,6 +44,9 @@ export default {
           commit('setLoading', false);
           commit('setError', err.response.data.message);
         });
+    },
+    logUserOut({ commit }) {
+      commit('clearUser');
     }
   }
 };

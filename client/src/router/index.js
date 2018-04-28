@@ -3,6 +3,9 @@ import Router from 'vue-router';
 
 import Signin from '@/views/Signin';
 import Signup from '@/views/Signup';
+import Settings from '@/views/Settings';
+
+import AuthGuard from './auth-guard';
 
 Vue.use(Router);
 
@@ -17,6 +20,12 @@ export default new Router({
       path: '/register',
       name: 'signup',
       component: Signup
+    },
+    {
+      path: '/settings',
+      name: 'settings',
+      component: Settings,
+      beforeEnter: AuthGuard
     }
   ]
 });

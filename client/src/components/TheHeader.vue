@@ -34,12 +34,12 @@ export default {
 
       if (this.user) {
         menuItems = [
-          { icon: 'note_add', title: 'New Article', link: '/login' },
-          { icon: 'settings', title: 'Settings', link: '/register' },
+          { icon: 'note_add', title: 'New Article', link: '/editor' },
+          { icon: 'settings', title: 'Settings', link: '/settings' },
           {
             icon: 'account_circle',
             title: this.user.username,
-            link: '/register'
+            link: `/@${this.user.username}`
           }
         ];
       }
