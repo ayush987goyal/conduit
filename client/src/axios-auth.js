@@ -4,7 +4,10 @@ const instance = axios.create({
   baseURL: process.env.VUE_APP_API
 });
 
-const token = `Bearer ${localStorage.getItem('token')}`;
-instance.defaults.headers.common['Authorization'] = token;
+instance.interceptors.request.use(response => {
+  const token = `Bearer ${localStorage.getItem('token')}`;
+  response.headers.Authorization = token;
+  return response;
+});
 
 export default instance;
