@@ -92,7 +92,21 @@ export default {
     this.email = this.user.email;
   },
   methods: {
-    submit() {},
+    submit() {
+      const user = {
+        username: this.username,
+        email: this.email,
+        bio: this.bio,
+        image: this.image
+      };
+
+      if (this.password) {
+        user.password = this.password;
+      }
+
+      this.$store.dispatch('updateUser', { user });
+      this.password = '';
+    },
     logout() {
       this.$store.dispatch('logUserOut');
       this.$router.push('/login');

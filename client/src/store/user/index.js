@@ -64,6 +64,21 @@ export default {
     },
     logUserOut({ commit }) {
       commit('clearUser');
+    },
+    updateUser({ commit }, payload) {
+      commit('setLoading', true);
+      commit('clearError');
+
+      axios
+        .put('/user', payload)
+        .then(res => {
+          commit('setLoading', false);
+          commit('setUser', res.data.user);
+        })
+        .catch(err => {
+          commit('setLoading', false);
+          commit('setError', err.response.data.message);
+        });
     }
   }
 };
