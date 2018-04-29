@@ -20,27 +20,21 @@ const user_signup = async (req, res, next) => {
     });
   }
 
-  const hash = await bcrypt.hash(reqData.password, 10);
-  const newUser = new User({
-    email: reqData.email,
-    password: hash,
-    username: reqData.username
-  });
+  const newUser = new User();
+
+  newUser.email = reqData.email;
+  newUser.username = reqData.username;
+  await newUser.setPassword(reqData.password);
 
   const result = newUser.save();
-  const details = { email: reqData.email, username: reqData.username, bio: null, image: null };
-  const token = jwt.sign(details, process.env.JWT_KEY, { expiresIn: '1h' });
-
   return res.status(200).json({
-    user: {
-      ...details,
-      token
-    }
+    user: newUser.getAuthJson()
   });
 };
 
 const user_login = async (req, res, next) => {
   const reqData = req.body.user;
+
   const user = await User.find({ email: reqData.email }).exec();
   if (user.length < 1) {
     return res.status(401).json({
@@ -48,26 +42,15 @@ const user_login = async (req, res, next) => {
     });
   }
 
-  const isValid = await bcrypt.compare(reqData.password, user[0].password);
+  const isValid = await user[0].validatePassword(reqData.password);
   if (!isValid) {
     return res.status(401).json({
       message: 'Invalid email or password'
     });
   }
 
-  const details = {
-    email: user[0].email,
-    username: user[0].username,
-    bio: user[0].bio,
-    image: user[0].image
-  };
-  const token = jwt.sign(details, process.env.JWT_KEY, { expiresIn: '1h' });
-
   return res.status(200).json({
-    user: {
-      ...details,
-      token
-    }
+    user: user[0].getAuthJson()
   });
 };
 

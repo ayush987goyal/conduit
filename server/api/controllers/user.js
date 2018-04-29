@@ -5,10 +5,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 const get_user = async (req, res, next) => {
-  const user = await User.findOne({
-    username: req.userData.username,
-    email: req.userData.email
-  }).exec();
+  const user = await User.findById(req.userData.id).exec();
 
   if (!user) {
     return res.status(401).json({
@@ -16,75 +13,54 @@ const get_user = async (req, res, next) => {
     });
   }
 
-  const details = {
-    email: user.email,
-    username: user.username,
-    bio: user.bio,
-    image: user.image
-  };
-  const token = jwt.sign(details, process.env.JWT_KEY, { expiresIn: '1h' });
-
   return res.status(200).json({
-    user: {
-      ...details,
-      token
-    }
+    user: user.getAuthJson()
   });
 };
 
 const update_user = async (req, res, next) => {
   const reqData = req.body.user;
-  const oldData = req.userData;
-  let user = null;
 
-  if (reqData.username !== oldData.username) {
-    user = await User.find({ username: reqData.username }).exec();
-    if (user.length >= 1) {
+  const user = await User.findById(req.userData.id).exec();
+  let users;
+
+  if (!user) {
+    return res.status(401).json({
+      message: 'No user found for this token.'
+    });
+  }
+
+  if (reqData.username !== user.username) {
+    users = await User.find({ username: reqData.username }).exec();
+    if (users.length >= 1) {
       return res.status(409).json({
         message: 'Username exists'
       });
     }
   }
 
-  if (reqData.email !== oldData.email) {
-    user = await User.find({ email: reqData.email }).exec();
-    if (user.length >= 1) {
+  if (reqData.email !== user.email) {
+    users = await User.find({ email: reqData.email }).exec();
+    if (users.length >= 1) {
       return res.status(409).json({
         message: 'Email exists'
       });
     }
   }
 
-  const updateDetails = {
-    email: reqData.email,
-    username: reqData.username,
-    bio: reqData.bio,
-    image: reqData.image
-  };
+  user.email = reqData.email;
+  user.username = reqData.username;
+  user.bio = reqData.bio;
+  user.image = reqData.image;
 
   if (reqData.password) {
-    const hash = await bcrypt.hash(reqData.password, 10);
-    updateDetails.password = hash;
+    await user.setPassword(reqData.password);
   }
 
-  const newUser = await User.findOneAndUpdate(
-    { username: oldData.username, email: oldData.email },
-    updateDetails
-  ).exec();
-
-  const details = {
-    email: reqData.email,
-    username: reqData.username,
-    bio: reqData.bio,
-    image: reqData.image
-  };
-  const token = jwt.sign(details, process.env.JWT_KEY, { expiresIn: '1h' });
+  const result = user.save();
 
   return res.status(200).json({
-    user: {
-      ...details,
-      token
-    }
+    user: user.getAuthJson()
   });
 };
 
