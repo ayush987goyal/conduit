@@ -4,6 +4,7 @@ import Router from 'vue-router';
 import Signin from '@/views/Signin';
 import Signup from '@/views/Signup';
 import Settings from '@/views/Settings';
+import Editor from '@/views/Editor';
 
 import AuthGuard from './auth-guard';
 
@@ -25,6 +26,12 @@ export default new Router({
       path: '/settings',
       name: 'settings',
       component: Settings,
+      beforeEnter: AuthGuard
+    },
+    {
+      path: '/editor',
+      name: 'editor',
+      component: Editor,
       beforeEnter: AuthGuard
     }
   ]
