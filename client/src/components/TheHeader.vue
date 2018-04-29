@@ -16,16 +16,14 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-
 export default {
   data() {
     return {
       title: 'Conduit'
     };
   },
+  props: ['user'],
   computed: {
-    ...mapState({ user: state => state.user.user }),
     menuItems() {
       let menuItems = [
         { icon: 'touch_app', title: 'Sign in', link: '/login' },

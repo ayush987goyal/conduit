@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <TheHeader />
+    <TheHeader :user="user"/>
 
     <v-content>
       <v-progress-linear :indeterminate="true" style="margin-top: 1px" v-if="loading"></v-progress-linear>
@@ -29,6 +29,7 @@ export default {
   },
   computed: {
     ...mapState({
+      user: state => state.user.user,
       loading: state => state.shared.loading,
       error: state => state.shared.error
     })
