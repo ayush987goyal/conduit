@@ -26,4 +26,19 @@ articleSchema.methods.updateFavoriteCount = async function() {
   return this.save();
 };
 
+articleSchema.methods.getJsonFor = function(user) {
+  return {
+    slug: this.slug,
+    title: this.title,
+    description: this.description,
+    body: this.body,
+    tagList: this.tagList,
+    createdAt: this.createdAt,
+    updatedAt: this.updatedAt,
+    favorited: user.isFavorited(this._id),
+    favoritesCount: this.favoritesCount,
+    author: this.author.getProfileJson(user)
+  };
+};
+
 module.exports = mongoose.model('Article', articleSchema);

@@ -45,6 +45,19 @@ userSchema.methods.getAuthJson = function() {
   };
 };
 
+userSchema.methods.getProfileJson = function(user) {
+  return {
+    username: this.username,
+    bio: this.bio,
+    image: this.image || 'https://static.productionready.io/images/smiley-cyrus.jpg',
+    following: user.isFollowing(this._id)
+  };
+};
+
+userSchema.methods.isFollowing = function(userId) {
+  return this.following.indexOf(userId) > -1;
+};
+
 userSchema.methods.addToFavorites = function(articleId) {
   if (this.favorites.indexOf(articleId) === -1) {
     this.favorites.push(articleId);
@@ -57,6 +70,10 @@ userSchema.methods.removeFromFavorites = function(articleId) {
   this.favorites.remove(articleId);
 
   return this.save();
+};
+
+userSchema.methods.isFavorited = function(articleId) {
+  return this.favorites.indexOf(articleId) > -1;
 };
 
 module.exports = mongoose.model('User', userSchema);
