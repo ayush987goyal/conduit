@@ -29,7 +29,7 @@
             append-icon=""
             clearable
             class="mt-3"
-            v-model="tags">
+            v-model="tagList">
               <template slot="selection" slot-scope="data">
                 <v-chip
                   close
@@ -65,22 +65,24 @@ export default {
       descriptionRules: [v => !!v || 'Decsription is required'],
       body: '',
       bodyRules: [v => !!v || 'Body is required'],
-      tags: []
+      tagList: []
     };
   },
   methods: {
     remove(item) {
-      this.tags.splice(this.tags.indexOf(item), 1);
-      this.tags = [...this.tags];
+      this.tagList.splice(this.tagList.indexOf(item), 1);
+      this.tagList = [...this.tagList];
     },
     submit() {
       const article = {
         title: this.title,
         description: this.description,
         body: this.body,
-        tags: this.tags
+        tagList: this.tagList
       };
-      console.log(article);
+      this.$store
+        .dispatch('createArticle', { article })
+        .then(data => this.$router.push(`/article/${data.article.slug}`));
     }
   }
 };
