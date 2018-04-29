@@ -6,6 +6,7 @@ import 'vuetify/dist/vuetify.min.css';
 import App from './App.vue';
 import router from './router';
 import store from './store';
+import DateFilter from './filters/date';
 // import './registerServiceWorker';
 
 Vue.use(Vuetify, {
@@ -14,6 +15,8 @@ Vue.use(Vuetify, {
   }
 });
 Vue.config.productionTip = false;
+
+Vue.filter('date', DateFilter);
 
 new Vue({
   router,

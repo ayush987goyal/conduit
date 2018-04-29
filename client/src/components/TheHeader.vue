@@ -22,12 +22,7 @@ export default {
       title: 'Conduit'
     };
   },
-  props: {
-    user: {
-      type: Object,
-      required: true
-    }
-  },
+  props: ['user'],
   computed: {
     menuItems() {
       let menuItems = [
