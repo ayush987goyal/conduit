@@ -1,14 +1,17 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const userSchema = mongoose.Schema(
+const userSchema = Schema(
   {
     email: { type: String, required: true, unique: true, index: true },
     username: { type: String, required: true, unique: true, index: true },
     password: { type: String, required: true },
     bio: String,
-    image: String
+    image: String,
+    favorites: [{ type: Schema.Types.ObjectId, ref: 'Article' }],
+    following: [{ type: Schema.Types.ObjectId, ref: 'User' }]
   },
   { timestamps: true }
 );
@@ -28,8 +31,7 @@ userSchema.methods.makeJWT = function() {
       id: this._id,
       username: this.username
     },
-    process.env.JWT_KEY,
-    { expiresIn: '1h' }
+    process.env.JWT_KEY
   );
 };
 
@@ -41,6 +43,20 @@ userSchema.methods.getAuthJson = function() {
     bio: this.bio,
     image: this.image
   };
+};
+
+userSchema.methods.addToFavorites = function(articleId) {
+  if (this.favorites.indexOf(articleId) === -1) {
+    this.favorites.push(articleId);
+  }
+
+  return this.save();
+};
+
+userSchema.methods.removeFromFavorites = function(articleId) {
+  this.favorites.remove(articleId);
+
+  return this.save();
 };
 
 module.exports = mongoose.model('User', userSchema);
