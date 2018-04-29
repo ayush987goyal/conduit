@@ -17,9 +17,9 @@
 <script>
 import { mapState } from 'vuex';
 
-import TheHeader from '@/components/TheHeader';
-import TheFooter from '@/components/TheFooter';
-import Alert from '@/components/Alert';
+import TheHeader from '@/components/Layout/TheHeader';
+import TheFooter from '@/components/Layout/TheFooter';
+import Alert from '@/components/UI/Alert';
 
 export default {
   components: {
