@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container class="elevation-2">
     <v-layout align-center>
       <v-flex xs3>
         <UserAvatar 
@@ -9,7 +9,7 @@
           @clicked="$emit('userClicked')" 
         />
       </v-flex>
-      <v-flex xs1 offset-xs8>
+      <v-flex xs1 offset-xs8 class="mr-0">
         <FavoriteButton 
           :active="isFavorite" 
           :favorites="articleFavCount" 
@@ -20,7 +20,11 @@
     <v-layout column class="mt-3 ml-1">
       <h2>{{ articleTitle }}</h2>
       <p class="grey--text">{{ articleDescription }}</p>
+    </v-layout>
+    <v-layout align-center class="ml-1 pr-2">
       <span class="grey--text" style="cursor: pointer" @click="$emit('readClicked')">Read more...</span>
+      <v-spacer></v-spacer>
+      <v-chip small v-for="tag in articleTagList" :key="tag">{{ tag }}</v-chip>
     </v-layout>
   </v-container>
 </template>
@@ -41,6 +45,7 @@ export default {
     articleTitle: { type: String, required: true },
     articleDescription: { type: String, required: true },
     articleFavCount: { type: Number, required: true },
+    articleTagList: { type: Array },
     isFavorite: { type: Boolean, required: true }
   }
 };

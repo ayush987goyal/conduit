@@ -2,7 +2,7 @@
   <v-container>
     <v-layout row>
       <v-flex xs8 offset-xs2>
-        <v-form v-model="valid" @submit.prevent ref="form" lazy-validation>
+        <v-form v-model="valid" @submit.prevent ref="form" >
           <v-text-field
             label="Article Title"
             v-model="title"

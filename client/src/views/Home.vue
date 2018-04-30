@@ -5,6 +5,7 @@
     :articleTitle="'Yo mama'"
     :articleDescription="'so fat'"
     :articleFavCount="4"
+    :articleTagList="['asd','dsfv', 'sdfsf','dsfsdf','fwewf']"
     :isFavorite="false"
     @userClicked="doStuff"
     @favToggled="doStuff"
