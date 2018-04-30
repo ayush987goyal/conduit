@@ -1,32 +1,34 @@
 <template>
-  <v-container class="elevation-2">
-    <v-layout align-center>
-      <v-flex xs3>
-        <UserAvatar 
-          :username="username" 
-          :image="userImage" 
-          :date="articleDate" 
-          @clicked="$emit('userClicked')" 
-        />
-      </v-flex>
-      <v-flex xs1 offset-xs8 class="mr-0">
-        <FavoriteButton 
-          :active="isFavorite" 
-          :favorites="articleFavCount" 
-          @toggled="$emit('favToggled')" 
-        />
-      </v-flex>
-    </v-layout>
-    <v-layout column class="mt-3 ml-1">
-      <h2>{{ articleTitle }}</h2>
-      <p class="grey--text">{{ articleDescription }}</p>
-    </v-layout>
-    <v-layout align-center class="ml-1 pr-2">
-      <span class="grey--text" style="cursor: pointer" @click="$emit('readClicked')">Read more...</span>
-      <v-spacer></v-spacer>
-      <v-chip small v-for="tag in articleTagList" :key="tag">{{ tag }}</v-chip>
-    </v-layout>
-  </v-container>
+  <v-card class="mt-1">
+    <v-container>
+      <v-layout align-center justify-end>
+        <v-flex xs3>
+          <UserAvatar 
+            :username="username" 
+            :image="userImage" 
+            :date="articleDate" 
+            @clicked="$emit('userClicked')" 
+          />
+        </v-flex>
+        <v-flex offset-xs9 class="pr-1">
+          <FavoriteButton 
+            :active="isFavorite" 
+            :favorites="articleFavCount" 
+            @toggled="$emit('favToggled')" 
+          />
+        </v-flex>
+      </v-layout>
+      <v-layout column class="mt-3 ml-1">
+        <h2>{{ articleTitle }}</h2>
+        <p class="grey--text">{{ articleDescription }}</p>
+      </v-layout>
+      <v-layout align-center class="ml-1">
+        <span class="grey--text" style="cursor: pointer" @click="$emit('readClicked')">Read more...</span>
+        <v-spacer></v-spacer>
+        <v-chip small v-for="tag in articleTagList" :key="tag">{{ tag }}</v-chip>
+      </v-layout>
+    </v-container>
+  </v-card>
 </template>
 
 <script>
