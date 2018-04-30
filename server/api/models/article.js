@@ -35,7 +35,7 @@ articleSchema.methods.getJsonFor = function(user) {
     tagList: this.tagList,
     createdAt: this.createdAt,
     updatedAt: this.updatedAt,
-    favorited: user.isFavorited(this._id),
+    favorited: user ? user.isFavorited(this._id) : false,
     favoritesCount: this.favoritesCount,
     author: this.author.getProfileJson(user)
   };

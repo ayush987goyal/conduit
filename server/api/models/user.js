@@ -50,7 +50,7 @@ userSchema.methods.getProfileJson = function(user) {
     username: this.username,
     bio: this.bio,
     image: this.image || 'https://static.productionready.io/images/smiley-cyrus.jpg',
-    following: user.isFollowing(this._id)
+    following: user ? user.isFollowing(this._id) : false
   };
 };
 

@@ -22,4 +22,40 @@ const create_article = async (req, res, next) => {
   });
 };
 
-module.exports = { create_article };
+const list_articles = async (req, res, next) => {
+  const limit = req.query.limit || 20;
+  const offset = req.query.offset || 0;
+
+  let query = {};
+  if (req.query.tag) {
+    query.tagList = { $in: [req.query.tag] };
+  }
+
+  const [author, favoritedBy] = await Promise.all([
+    req.query.author ? User.findOne({ username: req.query.author }) : null,
+    req.query.favorited ? User.findOne({ username: req.query.favorited }) : null
+  ]);
+
+  if (author) {
+    query.author = author.id;
+  }
+
+  if (favoritedBy) {
+    query._id = { $in: favoritedBy.favorites };
+  }
+
+  const user = req.userData ? await User.findById(req.userData.id) : null;
+
+  const articles = await Article.find(query)
+    .sort({ createdAt: -1 })
+    .skip(+offset)
+    .limit(+limit)
+    .populate('author')
+    .exec();
+
+  return res.status(200).json({
+    articles: articles.map(article => article.getJsonFor(user))
+  });
+};
+
+module.exports = { create_article, list_articles };
