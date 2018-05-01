@@ -58,4 +58,27 @@ const list_articles = async (req, res, next) => {
   });
 };
 
-module.exports = { create_article, list_articles };
+const feed_articles = async (req, res, next) => {
+  const limit = req.query.limit || 20;
+  const offset = req.query.offset || 0;
+
+  const user = await User.findById(req.userData.id).exec();
+  if (!user) {
+    return res.status(401).json({
+      message: 'Not a valid user.'
+    });
+  }
+
+  const articles = await Article.find({ author: { $in: user.following } })
+    .sort({ createdAt: -1 })
+    .skip(+offset)
+    .limit(+limit)
+    .populate('author')
+    .exec();
+
+  return res.status(200).json({
+    articles: articles.map(article => article.getJsonFor(user))
+  });
+};
+
+module.exports = { create_article, list_articles, feed_articles };
