@@ -6,7 +6,7 @@
           <v-tab v-for="tab in tabs" :key="tab">
             {{ tab }}
           </v-tab>
-          <v-tab-item v-for="tab in tabs" :key="tab">
+          <v-tab-item v-for="tab in tabs" :key="tab" :class="{'mt-3': !articles || articles.length <= 0}">
             <ArticleItem 
               v-if="articles"
               v-for="article in articles"
@@ -22,7 +22,10 @@
               @favToggled="doStuff(article)"
               @readClicked="doStuff(article)" 
             />
-            <span v-if="!articles || articles.length <= 0" class="mt-5">
+            <span v-if="loading">
+              Loading...
+            </span>
+            <span v-if="!loading && (!articles || articles.length <= 0)">
               No articles to display.
             </span>
           </v-tab-item>
@@ -34,7 +37,7 @@
           <div class="pl-2 pb-2">
             <v-chip 
               small 
-              v-for="tag in ['asd','dsfv', 'sdfsf','dsfsdf','fwf']" 
+              v-for="tag in tagList" 
               :key="tag"
               @click="addTagFilter(tag)">
               {{ tag }}
@@ -47,6 +50,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import axios from '@/axios-auth';
 import ArticleItem from '@/components/Article/ArticleItem';
 
@@ -54,12 +58,17 @@ export default {
   components: {
     ArticleItem
   },
+  computed: {
+    ...mapState({
+      loading: state => state.shared.loading
+    })
+  },
   data() {
     return {
       active: null,
       tabs: ['Your Feed', 'Global Feed'],
       articles: null,
-      selectedTag: null
+      tagList: null
     };
   },
   watch: {
@@ -73,13 +82,28 @@ export default {
       }
     }
   },
+  mounted() {
+    axios.get('/tags').then(res => (this.tagList = res.data.tags));
+  },
   methods: {
     doStuff(i) {
-      console.log('yo nig', i);
+      console.log('yo', i);
     },
     addTagFilter(tag) {
-      this.tabs = [...this.tabs.slice(0, 2), `#${tag}`];
-      this.active = '2';
+      if (this.tabs.length > 2) {
+        this.tabs = this.tabs.slice(0, 2);
+        this.active = `${+this.active - 1}`;
+        setTimeout(() => {
+          this.tabs.push(`#${tag}`);
+          this.active = `${this.tabs.length - 1}`;
+          this.populateArticles('/articles', {
+            params: { tag }
+          });
+        }, 1);
+        return;
+      }
+      this.tabs.push(`#${tag}`);
+      this.active = `${this.tabs.length - 1}`;
       this.populateArticles('/articles', {
         params: { tag }
       });
