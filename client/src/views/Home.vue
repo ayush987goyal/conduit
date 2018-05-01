@@ -22,6 +22,9 @@
               @favToggled="doStuff(article)"
               @readClicked="doStuff(article)" 
             />
+            <span v-if="!articles || articles.length <= 0" class="mt-5">
+              No articles to display.
+            </span>
           </v-tab-item>
         </v-tabs>
       </v-flex>
@@ -29,7 +32,13 @@
         <v-card class="ml-2">
           <v-card-title>Popular Tags</v-card-title>
           <div class="pl-2 pb-2">
-            <v-chip small v-for="tag in ['asd','dsfv', 'sdfsf','dsfsdf','fwf']" :key="tag">{{ tag }}</v-chip>
+            <v-chip 
+              small 
+              v-for="tag in ['asd','dsfv', 'sdfsf','dsfsdf','fwf']" 
+              :key="tag"
+              @click="addTagFilter(tag)">
+              {{ tag }}
+            </v-chip>
           </div>
         </v-card>
       </v-flex>
@@ -49,29 +58,44 @@ export default {
     return {
       active: null,
       tabs: ['Your Feed', 'Global Feed'],
-      articles: null
+      articles: null,
+      selectedTag: null
     };
   },
   watch: {
     active(val) {
-      console.log(val);
+      if (+val === 0) {
+        this.tabs = this.tabs.slice(0, 2);
+        this.populateArticles('/articles/feed');
+      } else if (+val === 1) {
+        this.tabs = this.tabs.slice(0, 2);
+        this.populateArticles('/articles');
+      }
     }
-  },
-  mounted() {
-    this.$store.commit('setLoading', true);
-    axios
-      .get('/articles')
-      .then(res => {
-        this.$store.commit('setLoading', false);
-        this.articles = res.data.articles;
-      })
-      .catch(() => {
-        this.$store.commit('setLoading', false);
-      });
   },
   methods: {
     doStuff(i) {
       console.log('yo nig', i);
+    },
+    addTagFilter(tag) {
+      this.tabs = [...this.tabs.slice(0, 2), `#${tag}`];
+      this.active = '2';
+      this.populateArticles('/articles', {
+        params: { tag }
+      });
+    },
+    populateArticles(endpoint, options = {}) {
+      this.articles = null;
+      this.$store.commit('setLoading', true);
+      axios
+        .get(endpoint, options)
+        .then(res => {
+          this.$store.commit('setLoading', false);
+          this.articles = res.data.articles;
+        })
+        .catch(() => {
+          this.$store.commit('setLoading', false);
+        });
     }
   }
 };
