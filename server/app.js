@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const usersRouter = require('./api/routes/users');
 const userRouter = require('./api/routes/user');
 const articlesRouter = require('./api/routes/articles');
+const tagsRouter = require('./api/routes/tags');
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/users', usersRouter);
 app.use('/api/user', userRouter);
 app.use('/api/articles', articlesRouter);
+app.use('/api/tags', tagsRouter);
 
 mongoose.connect(process.env.MONGOLAB_URI);
 mongoose.Promise = global.Promise;
