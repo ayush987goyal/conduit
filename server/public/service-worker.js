@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.1.0/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.0ca55c1763beee9e52ad0c349f386ac6.js"
+  "/precache-manifest.693d809091dc964f97a406ca070de886.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "conduit-clone"});
