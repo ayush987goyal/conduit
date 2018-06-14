@@ -2,7 +2,7 @@
   <v-container>
     <v-layout justify-space-between>
       <v-flex xs9>
-        <v-tabs v-model="active" slider-color="green">
+        <v-tabs v-model="active" slider-color="green" @input="doStuff($event)">
           <v-tab v-for="tab in tabs" :key="tab">
             {{ tab }}
           </v-tab>
@@ -90,23 +90,29 @@ export default {
       console.log('yo', i);
     },
     addTagFilter(tag) {
-      if (this.tabs.length > 2) {
-        this.tabs = this.tabs.slice(0, 2);
-        this.active = `${+this.active - 1}`;
-        setTimeout(() => {
-          this.tabs.push(`#${tag}`);
-          this.active = `${this.tabs.length - 1}`;
-          this.populateArticles('/articles', {
-            params: { tag }
-          });
-        }, 1);
-        return;
-      }
-      this.tabs.push(`#${tag}`);
-      this.active = `${this.tabs.length - 1}`;
+      // if (this.tabs.length > 2) {
+      //   this.tabs = this.tabs.slice(0, 2);
+      //   this.active = `${+this.active - 1}`;
+      //   setTimeout(() => {
+      //     this.tabs.push(`#${tag}`);
+      //     this.active = `${this.tabs.length - 1}`;
+      //     this.populateArticles('/articles', {
+      //       params: { tag }
+      //     });
+      //   }, 1);
+      //   return;
+      // }
+      // this.tabs.push(`#${tag}`);
+      // this.active = `${this.tabs.length - 1}`;
+      // this.populateArticles('/articles', {
+      //   params: { tag }
+      // });
+      this.tabs = [...this.tabs, tag];
       this.populateArticles('/articles', {
         params: { tag }
       });
+      this.active = `${this.tabs.length - 1}`;
+      // this.tabs = [...this.tabs.slice(0, 3)];
     },
     populateArticles(endpoint, options = {}) {
       this.articles = null;
