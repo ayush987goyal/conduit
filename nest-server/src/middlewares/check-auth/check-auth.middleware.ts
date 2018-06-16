@@ -42,8 +42,7 @@ export class CheckAuthMiddleware implements NestMiddleware {
     const match = options.find(option => {
       return (
         option.path === req.path &&
-        (option.method === RequestMethod[req.method] ||
-          req.method === RequestMethod.ALL)
+        (option.method === RequestMethod[req.method] || req.method === RequestMethod.ALL)
       );
     });
 

@@ -9,16 +9,12 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Post()
-  async signup(
-    @Body('user') createUserDto: CreateUserDto
-  ): Promise<{ user: UserAuthDto }> {
+  async signup(@Body('user') createUserDto: CreateUserDto): Promise<{ user: UserAuthDto }> {
     return this.usersService.createUser(createUserDto);
   }
 
   @Post('/login')
-  async login(
-    @Body('user') createUserDto: CreateUserDto
-  ): Promise<{ user: UserAuthDto }> {
+  async login(@Body('user') createUserDto: CreateUserDto): Promise<{ user: UserAuthDto }> {
     return this.usersService.loginUser(createUserDto);
   }
 
