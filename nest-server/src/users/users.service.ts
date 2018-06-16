@@ -73,4 +73,48 @@ export class UsersService {
 
     return { user: user.getAuthJson() };
   }
+
+  async updateUser(
+    id: string,
+    reqData: CreateUserDto
+  ): Promise<{ user: UserAuthDto }> {
+    const user = await this.userModel.findById(id).exec();
+    let users;
+
+    if (!user) {
+      throw new HttpException(
+        'No user found for this token.',
+        HttpStatus.FORBIDDEN
+      );
+    }
+
+    if (reqData.username !== user.username) {
+      users = await this.userModel.find({ username: reqData.username }).exec();
+      if (users.length >= 1) {
+        throw new HttpException('Username exists', HttpStatus.CONFLICT);
+      }
+    }
+
+    if (reqData.email !== user.email) {
+      users = await this.userModel.find({ email: reqData.email }).exec();
+      if (users.length >= 1) {
+        throw new HttpException('Email exists', HttpStatus.CONFLICT);
+      }
+    }
+
+    user.set({
+      email: reqData.email,
+      username: reqData.username,
+      bio: reqData.bio,
+      image: reqData.image
+    });
+
+    if (reqData.password) {
+      await user.setPassword(reqData.password);
+    }
+
+    await user.save();
+
+    return { user: user.getAuthJson() };
+  }
 }
