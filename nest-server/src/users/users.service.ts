@@ -12,13 +12,11 @@ export class UsersService {
 
   async createUser(createUserDto: CreateUserDto): Promise<{ user: UserAuthDto }> {
     let users: User[] = await this.userModel.find({ username: createUserDto.username }).exec();
-
     if (users.length > 0) {
       throw new HttpException('username or email exists', HttpStatus.CONFLICT);
     }
 
     users = await this.userModel.find({ email: createUserDto.email }).exec();
-
     if (users.length > 0) {
       throw new HttpException('username or email exists', HttpStatus.CONFLICT);
     }
@@ -34,7 +32,6 @@ export class UsersService {
 
   async loginUser(createUserDto: CreateUserDto): Promise<{ user: UserAuthDto }> {
     const users: User[] = await this.userModel.find({ email: createUserDto.email }).exec();
-
     if (users.length < 1) {
       throw new HttpException('Invalid email or password.', HttpStatus.FORBIDDEN);
     }
@@ -49,7 +46,6 @@ export class UsersService {
 
   async getUserById(id: string): Promise<{ user: UserAuthDto }> {
     const user = await this.userModel.findById(id).exec();
-
     if (!user) {
       throw new HttpException('No user found for this token.', HttpStatus.NOT_FOUND);
     }
@@ -59,12 +55,11 @@ export class UsersService {
 
   async updateUser(id: string, reqData: CreateUserDto): Promise<{ user: UserAuthDto }> {
     const user = await this.userModel.findById(id).exec();
-    let users;
-
     if (!user) {
       throw new HttpException('No user found for this token.', HttpStatus.FORBIDDEN);
     }
 
+    let users;
     if (reqData.username !== user.username) {
       users = await this.userModel.find({ username: reqData.username }).exec();
       if (users.length >= 1) {
@@ -91,7 +86,6 @@ export class UsersService {
     }
 
     await user.save();
-
     return { user: user.getAuthJson() };
   }
 }
