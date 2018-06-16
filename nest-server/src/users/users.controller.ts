@@ -1,10 +1,4 @@
-import {
-  Controller,
-  Post,
-  Body,
-  HttpException,
-  HttpStatus
-} from '@nestjs/common';
+import { Controller, Post, Body, Get, Req } from '@nestjs/common';
 
 import { UsersService } from './users.service';
 import { CreateUserDto } from './models/create-user.dto';
@@ -26,5 +20,10 @@ export class UsersController {
     @Body('user') createUserDto: CreateUserDto
   ): Promise<{ user: UserAuthDto }> {
     return this.usersService.loginUser(createUserDto);
+  }
+
+  @Get()
+  async getUser(@Req() request): Promise<{ user: UserAuthDto }> {
+    return this.usersService.getUserById(request.userData.id);
   }
 }

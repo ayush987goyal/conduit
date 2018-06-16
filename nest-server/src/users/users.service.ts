@@ -60,4 +60,17 @@ export class UsersService {
 
     return { user: users[0].getAuthJson() };
   }
+
+  async getUserById(id: string): Promise<{ user: UserAuthDto }> {
+    const user = await this.userModel.findById(id).exec();
+
+    if (!user) {
+      throw new HttpException(
+        'No user found for this token.',
+        HttpStatus.NOT_FOUND
+      );
+    }
+
+    return { user: user.getAuthJson() };
+  }
 }
