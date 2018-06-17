@@ -1,6 +1,6 @@
-import { Controller, Get, Post, Req } from '@nestjs/common';
+import { Controller, Get, Post, Req, Body } from '@nestjs/common';
 
-import { ArticlesService, ArticleFilter } from './articles.service';
+import { ArticlesService, ArticleFilter, CreateArticleDto } from './articles.service';
 import { ArticleForUser } from './models/article-for-user.dto';
 
 @Controller('/api/articles')
@@ -21,7 +21,12 @@ export class ArticlesController {
   }
 
   @Post()
-  async createArticle() {}
+  async createArticle(
+    @Req() req,
+    @Body('article') newArticleData: CreateArticleDto
+  ): Promise<{ article: ArticleForUser }> {
+    return this.articlesService.createArticle(req.userData.id, newArticleData);
+  }
 
   @Get('/feed')
   async getFeed() {}

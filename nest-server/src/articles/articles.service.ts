@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
@@ -6,13 +6,20 @@ import { Article } from './models/article.interface';
 import { ArticleForUser } from './models/article-for-user.dto';
 import { User } from 'users/models/user.interface';
 
-export interface ArticleFilter {
+export class ArticleFilter {
   limit?: number;
   offset?: number;
   tag?: string;
   author?: string;
   favorited?: string;
   userId?: string;
+}
+
+export class CreateArticleDto {
+  title: string;
+  description: string;
+  body: string;
+  tagList: string[];
 }
 
 @Injectable()
@@ -44,7 +51,9 @@ export class ArticlesService {
       query._id = { $in: favoritedBy.favorites };
     }
 
-    const user = articleFilter.userId ? await this.userModel.findById(articleFilter.userId) : null;
+    const user = articleFilter.userId
+      ? await this.userModel.findById(articleFilter.userId).exec()
+      : null;
 
     const articles = await this.articleModel
       .find(query)
@@ -54,8 +63,28 @@ export class ArticlesService {
       .populate('author')
       .exec();
 
-    return {
-      articles: articles.map(article => article.getJsonFor(user))
-    };
+    return { articles: articles.map(article => article.getJsonFor(user)) };
+  }
+
+  async createArticle(
+    userId: string,
+    articleData: CreateArticleDto
+  ): Promise<{ article: ArticleForUser }> {
+    const user = await this.userModel.findById(userId).exec();
+    if (!user) {
+      throw new HttpException('Not a valid user.', HttpStatus.FORBIDDEN);
+    }
+
+    const article = new this.articleModel({
+      title: articleData.title,
+      description: articleData.description,
+      body: articleData.body,
+      tagList: articleData.tagList,
+      author: user
+    });
+
+    await article.save();
+
+    return { article: article.getJsonFor(user) };
   }
 }

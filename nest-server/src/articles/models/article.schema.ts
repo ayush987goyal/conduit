@@ -1,7 +1,10 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, plugin } from 'mongoose';
+import * as slug from 'mongoose-slug-generator';
 
 import { UserSchema } from 'users/models/user.schema';
+
 const User = model('User', UserSchema);
+plugin(slug);
 
 export const ArticleSchema = new Schema(
   {
