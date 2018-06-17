@@ -1,6 +1,7 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
+import { MorganMiddleware } from 'middlewares/morgan/morgan.middleware';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -18,4 +19,9 @@ import { ArticlesModule } from './articles/articles.module';
   controllers: [AppController],
   providers: [AppService]
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    MorganMiddleware.configure('dev');
+    consumer.apply(MorganMiddleware).forRoutes(AppController);
+  }
+}
