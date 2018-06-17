@@ -87,4 +87,24 @@ export class ArticlesService {
 
     return { article: article.getJsonFor(user) };
   }
+
+  async getFeedArticles(articleFilter: ArticleFilter): Promise<{ articles: ArticleForUser[] }> {
+    const limit = articleFilter.limit || 20;
+    const offset = articleFilter.offset || 0;
+
+    const user = await this.userModel.findById(articleFilter.userId).exec();
+    if (!user) {
+      throw new HttpException('Not a valid user.', HttpStatus.FORBIDDEN);
+    }
+
+    const articles = await this.articleModel
+      .find({ author: { $in: user.following } })
+      .sort({ createdAt: -1 })
+      .skip(+offset)
+      .limit(+limit)
+      .populate('author')
+      .exec();
+
+    return { articles: articles.map(article => article.getJsonFor(user)) };
+  }
 }

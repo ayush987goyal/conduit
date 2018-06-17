@@ -29,5 +29,12 @@ export class ArticlesController {
   }
 
   @Get('/feed')
-  async getFeed() {}
+  async getFeed(@Req() req): Promise<{ articles: ArticleForUser[] }> {
+    const filters: ArticleFilter = {
+      limit: +req.query.limit,
+      offset: +req.query.offset,
+      userId: req.userData.id
+    };
+    return this.articlesService.getFeedArticles(filters);
+  }
 }
