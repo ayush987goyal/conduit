@@ -53,7 +53,7 @@ export default {
 
       commit('setLoading', true);
       axios
-        .get('/user')
+        .get('/users')
         .then(res => {
           commit('setLoading', false);
           commit('setUser', res.data.user);
@@ -70,7 +70,7 @@ export default {
       commit('clearError');
 
       axios
-        .put('/user', payload)
+        .put('/users', payload)
         .then(res => {
           commit('setLoading', false);
           commit('setUser', res.data.user);
